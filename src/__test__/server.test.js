@@ -108,7 +108,7 @@ describe('/api/trees', () => {
           // expect(response.body).toEqual('');
         });
     });
-    test('should respond with 400 if there is no tree to be found', () => {
+    test('should respond with 404 if there is no tree to be found', () => {
       return superagent.get(`${apiURL}/NOTVALID`)
         .then(Promise.reject) 
         .catch((response) => {
