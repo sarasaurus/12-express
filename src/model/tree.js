@@ -18,10 +18,18 @@ const treeSchema = mongoose.Schema({
     required: false,
     minlength: 1,
   },
-  // timestamp: {
-  //   type: Date,
-  //   default: () => new Date(),
-  // },
+  timestamp: {
+    type: Date,
+    default: () => new Date(),
+  },
+  /* TODO: insert the connecting property
+ many/child: [
+    {
+      type: mongoose.Schema.Types.ObjectId, ref: 'many/child', your many/child/sub model name goes here
+    this will push the connecting property/references ids into an array
+    }
+  ],
+  */
 });
 
 export default mongoose.model('tree', treeSchema);

@@ -25,10 +25,14 @@ const startServer = () => {
       server = app.listen(process.env.PORT, () => {
         logger.log(logger.INFO, `Server is listening on port ${process.env.PORT}------------------------------------`);
       });
-    });
+    })
+    .catch((err) => {
+      logger.log(logger.ERROR, `something happened in server, ${JSON.stringify(err)}`);
+    }); // you could chain a .catch here for any errors, judy says unlikely, but if want to be robust can
 };
 
 const stopServer = () => {
+  // mongoose.diconnect returns a promise, so needs a .then
   return mongoose.disconnect()
     .then(() => {
       server.close(() => {

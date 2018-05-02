@@ -1,4 +1,5 @@
 'use strict';
+
 import logger from './logger';
 
 export default (error, request, response, next) => {
@@ -13,6 +14,7 @@ export default (error, request, response, next) => {
   const errorMessage = error.message.toLowerCase();
 
   if (errorMessage.includes('objectid failed')) {
+    // these errorMessages come from mongoose/mongo -- having read docs, we know these errors will come back and are checking for these strings in our 
     logger.log(logger.INFO, 'Responding with a 404 code');
     return response.sendStatus(404);
   }
