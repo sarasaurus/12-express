@@ -14,7 +14,14 @@ const createTreeMock = () => {
     height: faker.finance.amount(1, 10),
   }).save();
 };
-
+// beforeAll(() => {
+//   const createManyMockTrees = (5) => {
+//     return Promise.all(new Array(5)
+//       .fill(0)
+//       .map(() => createNoteMock()));
+//   };
+// });
+  // ));
 describe('/api/trees', () => {
   beforeAll(startServer); 
   afterAll(stopServer);
@@ -59,7 +66,30 @@ describe('/api/trees', () => {
           expect(response.body.genus).toEqual(treeToTest.genus);
         });
     });
-    test('should respond with 404 if there is no note to be found', () => {
+    test('should respond with 404 if there is no tree to be found', () => {
+      return superagent.get(`${apiURL}/NOTVALID`)
+        .then(Promise.reject)
+        .catch((response) => {
+          expect(response.status).toEqual(404);
+        });
+    });
+  });
+  describe('PUT /api/trees', () => {
+    test('should update a tree and respond with 200 if there are no errors', () => {
+      let treeToTest = null;
+      return createTreeMock()
+        .then((tree) => {
+          treeToTest = tree;
+          return superagent.put(`${apiURL}/${tree._id}`)
+            .send({ genus: 'wow cool test bro' });
+        })
+        .then((response) => {
+          expect(response.status).toEqual(200);
+          expect(response.body.type).toEqual(treeToTest.type);
+          expect(response.body.genus).toEqual('wow cool test bro');
+        });
+    });
+    test('should respond with 404 if there is no tree to be found', () => {
       return superagent.get(`${apiURL}/NOTVALID`)
         .then(Promise.reject)
         .catch((response) => {
@@ -68,21 +98,9 @@ describe('/api/trees', () => {
     });
   });
   describe('GET ALL /api/trees', () => {
-
-    // beforeAll(() => {
-    //   const createManyMockTrees = (5) => {
-    //     return Promise.all(new Array(5)
-    //       .fill(0)
-    //       .map(() => createNoteMock()));
-    //   };
-    // });
-    // afterAll(()=>{
-
-    // }));
     test('should respond with 200 if there are no errors', () => {
       let treeToTest = null; 
-      // let testTree = null;//  Vinicio - we need to preserve the note because of scope rules
-      return createTreeMock() // Vinicio - test only a GET request
+      return createTreeMock() 
         .then((tree) => {
           treeToTest = tree;
           return superagent.get(`${apiURL}`);
@@ -105,10 +123,9 @@ describe('/api/trees', () => {
         })
         .then((response) => {
           expect(response.status).toEqual(204);
-          // expect(response.body).toEqual('');
         });
     });
-    test('should respond with 400 if there is no tree to be found', () => {
+    test('should respond with 404 if there is no tree to be found', () => {
       return superagent.get(`${apiURL}/NOTVALID`)
         .then(Promise.reject) 
         .catch((response) => {
