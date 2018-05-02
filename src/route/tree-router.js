@@ -25,6 +25,23 @@ treeRouter.post('/api/trees', jsonParser, (request, response, next) => {
     .catch(next);
 });
 
+treeRouter.put('/api/trees/:id', jsonParser, (request, response, next) => {
+  logger.log(logger.INFO, 'GET - processing a request');
+  const options = { runValidators: true, new: true };
+
+  return Tree.findByIdAndUpdate(request.params.id, request.body, options)
+    .then((updatedTree) => { 
+      if (!updatedTree) {
+        logger.log(logger.INFO, 'PUT - responding with a 404 status code - (!tree)');
+        return next(new HttpErrors(404, 'tree not found'));
+      }
+      logger.log(logger.INFO, 'PUT - responding with a 200 status code');
+      logger.log(logger.INFO, `PUT - resource is: ${updatedTree}`);
+      return response.json(updatedTree);
+    })
+    .catch(next);
+});
+
 
 treeRouter.get('/api/trees/:id', (request, response, next) => {
   

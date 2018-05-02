@@ -27,9 +27,9 @@ export default (error, request, response, next) => {
     return response.sendStatus(409);
   }
 
-  if (errorMessage.includes('unau1horized')) {
+  if (errorMessage.includes('unauthorized')) {
     logger.log(logger.INFO, 'Responding with a 401 code');
-    return response.sendStatus(404);
+    return response.sendStatus(401);
   }
 
   logger.log(logger.ERROR, 'Responding with a 500 error code');
